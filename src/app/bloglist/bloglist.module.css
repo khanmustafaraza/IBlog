@@ -1,0 +1,135 @@
+/* Container */
+.blogListContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+/* Page Title */
+.pageTitle {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #1f2937;
+}
+
+/* Grid Layout */
+.blogGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .blogGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Blog Card */
+.blogCard {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.blogCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Image */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+.blogImage {
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.blogCard:hover .blogImage {
+  transform: scale(1.05);
+}
+
+/* Content */
+.blogContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.blogTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.blogDesc {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+/* Read More Button */
+.readMoreBtn {
+  padding: 10px 20px;
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.readMoreBtn:hover {
+  background-color: #4338ca;
+  transform: translateY(-2px);
+}
+
+/* Messages */
+.message {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 50px;
+  color: #6b7280;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .imageWrapper {
+    height: 180px;
+  }
+
+  .blogTitle {
+    font-size: 20px;
+  }
+
+  .blogDesc {
+    font-size: 15px;
+  }
+
+  .readMoreBtn {
+    padding: 8px 16px;
+  }
+}

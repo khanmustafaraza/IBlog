@@ -1,0 +1,29 @@
+// import connectDB from "@/utils/db";
+// import Post from "@/models/Post";
+// import Image from "next/image";
+
+// export default async function BlogList() {
+//   await connectDB();
+
+//   const posts = await Post.find().sort({ createdAt: -1 });
+
+//   return (
+//     <div className="blog-list">
+//       {posts.map((post) => (
+//         <div key={post._id} className="blog-card">
+//           <h2>{post.title}</h2>
+//           <p>{post.desc}</p>
+//           {post.image && (
+//             <Image
+//               src={post.image}
+//               alt={post.title}
+//               width={500}
+//               height={300}
+//               className="blog-image"
+//             />
+//           )}
+//         </div>
+//       ))}
+//     </div>
+//   );
+//
