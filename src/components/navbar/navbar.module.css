@@ -15,6 +15,15 @@
   font-weight: bold;
   letter-spacing: 1px;
 }
+.navLoginBtn {
+  background-color: white;
+  border: none;
+  outline: none;
+  padding: 8px 23px;
+  color: black !important;
+  border-radius: 4px;
+  border: 1px solid black;
+}
 
 .navLinks {
   list-style: none;

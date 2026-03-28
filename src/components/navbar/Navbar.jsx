@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import styles from "./navbar.module.css";
 import Link from "next/link";
@@ -18,10 +18,23 @@ const Navbar = () => {
       </div>
 
       <ul className={`${styles.navLinks} ${menuOpen ? styles.showMenu : ""}`}>
-        <li><Link href="/">Home</Link></li>
-        <li><Link href="/about">About</Link></li>
-        <li><Link href="/">Services</Link></li>
-        <li><Link href="/contact">Contact</Link></li>
+        <li>
+          <Link href="/login" className={styles.navLoginBtn}>
+            Login
+          </Link>
+        </li>
+        <li>
+          <Link href="/">Home</Link>
+        </li>
+        <li>
+          <Link href="/about">About</Link>
+        </li>
+        <li>
+          <Link href="/">Services</Link>
+        </li>
+        <li>
+          <Link href="/contact">Contact</Link>
+        </li>
       </ul>
     </nav>
   );

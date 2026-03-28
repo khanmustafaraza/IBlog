@@ -1,13 +1,22 @@
-import React from 'react'
+import Rightbar from "@/components/rightbar/Rightbar";
+import Sidebar from "@/components/sidebar/Sidebar";
+import React from "react";
 
-const AdminLayout = ({children}) => {
+const AdminLayout = ({ children }) => {
+  const navData = [
+    {
+      id: 1,
+      name: "Dashbaord",
+      link: "/admindashbaor",
+    },
+  ];
   return (
-    <div>
-        <h1>Good</h1>
+    <div className="flex">
+      <Sidebar data={navData} />
 
-        {children}
+      <Rightbar children={children} />
     </div>
-  )
-}
+  );
+};
 
-export default AdminLayout
+export default AdminLayout;
