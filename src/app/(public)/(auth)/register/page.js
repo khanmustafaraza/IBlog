@@ -8,40 +8,6 @@ import useAuth from "@/context/authcontext/AuthContext";
 const Register = () => {
   const { state, handleRegisterChange, registerSubmit } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      setMessage("Registration successful!");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-    } catch (err) {
-      console.error(err);
-      setMessage(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <section className={styles.container}>
       <div className={styles.card}>

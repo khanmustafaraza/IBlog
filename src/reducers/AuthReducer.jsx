@@ -15,6 +15,22 @@ const reducer = (state, action) => {
           [action.payload.name]: action.payload.value,
         },
       };
+    case "HANDLE_LOGIN_CHANGE":
+      return {
+        ...state,
+        loginObj: {
+          ...state.loginObj,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    case "SET_USER":
+      return {
+        ...state,
+        user: {
+          token: action.payload.token,
+          user: action.payload.user,
+        },
+      };
 
     default:
       return state;

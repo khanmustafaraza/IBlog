@@ -3,38 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./login.module.css";
+import useAuth from "@/context/authcontext/AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
-      setMessage("Login successful!");
-      setEmail("");
-      setPassword("");
-    } catch (err) {
-      console.error(err);
-      setMessage(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { handleLoginChange, loginSubmit, state } = useAuth();
 
   return (
     <section className={styles.container}>
@@ -47,14 +19,15 @@ const Login = () => {
           </p>
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={(e)=>loginSubmit(e)}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>Email Address</label>
             <input
+              name="email"
               type="email"
               placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={state.loginObj.email}
+              onChange={(e) => handleLoginChange(e)}
               required
               className={styles.input}
             />
@@ -67,30 +40,21 @@ const Login = () => {
             </div>
             <input
               type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              placeholder="Password"
+              value={state.loginObj.password}
+              onChange={(e) => handleLoginChange(e)}
               required
               className={styles.input}
             />
           </div>
 
-          <button type="submit" className={styles.button} disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Login"}
+          <button type="submit" className={styles.button} >
+         Login Now
           </button>
         </form>
 
-        {message && (
-          <p
-            className={`${styles.message} ${
-              message.toLowerCase().includes("successful")
-                ? styles.success
-                : styles.error
-            }`}
-          >
-            {message}
-          </p>
-        )}
+     
 
         <p className={styles.bottomText}>
           Don&apos;t have an account?{" "}

@@ -23,8 +23,9 @@ export default function Home() {
             <Image
               src="https://img.freepik.com/free-photo/online-message-blog-chat-communication-envelop-graphic-icon-concept_53876-139717.jpg"
               alt="Hero Image"
-              fill
+            fill={true}
               className={styles.image}
+              loading="eager"
             />
           </div>
         </section>
