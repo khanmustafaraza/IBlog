@@ -2,10 +2,15 @@
 
 import reducer from "@/reducers/AuthReducer";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useReducer, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from "react";
 import { toast } from "react-toastify";
 
-// -------------------- Context & Initial State --------------------
 const AuthApp = createContext();
 
 const initialState = {
@@ -21,26 +26,39 @@ const initialState = {
     email: "",
     password: "",
   },
-  user: {
-    token: "",
-    user: null,
-  },
+  user: null,
 };
 
-// -------------------- Provider Component --------------------
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const storedAuth = localStorage.getItem("auth");
-    if (storedAuth) {
-      const parsed = JSON.parse(storedAuth);
-      console.log("prased", parsed);
-      dispatch({ type: "SET_USER", payload: parsed });
+  // -------------------- Get Current User --------------------
+  const getCurrentUser = useCallback(async () => {
+    try {
+      dispatch({ type: "SET_LOADING" });
+
+      const res = await fetch("/api/auth/me", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        dispatch({ type: "SET_USER", payload: data.user });
+      } else {
+        dispatch({ type: "CLEAR_USER" });
+      }
+    } catch (error) {
+      dispatch({ type: "CLEAR_USER" });
     }
   }, []);
+
+  // -------------------- Load user from cookie session --------------------
+  useEffect(() => {
+    getCurrentUser();
+  }, [getCurrentUser]);
 
   // -------------------- Handle Register Change --------------------
   const handleRegisterChange = (e) => {
@@ -64,10 +82,10 @@ const AuthProvider = ({ children }) => {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Error in register");
+      if (!res.ok) throw new Error(data.msg || "Error in register");
 
       if (data.success) {
-        toast.success(data.message || "Account created successfully");
+        toast.success(data.msg || "Account created successfully");
         router.push("/login");
       }
     } catch (error) {
@@ -93,6 +111,7 @@ const AuthProvider = ({ children }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(state.loginObj),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -102,23 +121,40 @@ const AuthProvider = ({ children }) => {
         return;
       }
 
-      // -------------------- Save user & token --------------------
-      const { token, isAdmin, ...user } = data.user ? data.user : data; // adjust if API sends user inside `data.user`
-
-      const authData = { token, ...user };
-
-      localStorage.setItem("auth", JSON.stringify(authData));
-
-      dispatch({ type: "SET_USER", payload: authData });
+      dispatch({ type: "SET_USER", payload: data.user });
 
       toast.success(data.msg || "Login successful");
-      router.push("/"); // redirect after login
+
+      if (data.user.isAdmin) {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/user/dashboard");
+      }
     } catch (error) {
       toast.error(error.message || "Login failed");
     }
   };
 
-  // -------------------- Context Value --------------------
+  // -------------------- Logout --------------------
+  const logoutUser = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        dispatch({ type: "CLEAR_USER" });
+        toast.success(data.msg || "Logged out");
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
+
   return (
     <AuthApp.Provider
       value={{
@@ -127,6 +163,8 @@ const AuthProvider = ({ children }) => {
         registerSubmit,
         handleLoginChange,
         loginSubmit,
+        logoutUser,
+        getCurrentUser,
       }}
     >
       {children}
@@ -134,13 +172,14 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// -------------------- Hook --------------------
 const useAuth = () => {
-  try {
-    return useContext(AuthApp);
-  } catch (error) {
-    throw new Error(error.message);
+  const context = useContext(AuthApp);
+
+  if (!context) {
+    throw new Error("useAuth must be used inside AuthProvider");
   }
+
+  return context;
 };
 
 export { AuthProvider };
